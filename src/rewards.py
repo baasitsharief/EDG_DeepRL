@@ -20,6 +20,8 @@ else:
 	print('No GPU available, using the CPU instead.')
 	device = torch.device("cpu")
 
+tokenizer = AutoTokenizer.from_pretrained("roberta-large")
+
 print("Loading Coherence Model")
 coherence_model = CoherenceClassifier(device, model_path=coherence_model_path)
 print("Coherence Model Loaded")
@@ -56,6 +58,14 @@ def informationFlow(responses):
     r2=0
     if(len(responses) > 2):
         #2 representations obtained from the encoder for two consecutive turns pi and pi+1
+        responses = tokenizer.encode_plus(
+								responses,                      # Sentence to encode.
+								add_special_tokens = True, # Add '[CLS]' and '[SEP]'
+								max_length = 64,           # Pad & truncate all sentences.
+								pad_to_max_length = True,
+								return_attention_mask = True,   # Construct attn. masks.
+								return_tensors = 'pt',     # Return pytorch tensors.
+						)
         h_pi = responses[-3]
         h_pi1 = responses[-1]
         # length of the two vector might not match
