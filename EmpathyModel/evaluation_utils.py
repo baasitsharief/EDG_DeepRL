@@ -1,3 +1,12 @@
+'''I/we certify that the code and data in this assignment were generated
+independently, using only the tools and resources defined in the course
+and that I/we did not receive any external help, coaching or contributions
+during the production of this work."
+
+References: 
+1. https://github.com/lvwerra/trl/blob/master/nbs/04-gpt2-sentiment-ppo-training.ipynb
+2. https://github.com/behavioral-data/Empathy-Mental-Health'''
+
 from sklearn.metrics import f1_score
 import numpy as np
 import pandas as pd
