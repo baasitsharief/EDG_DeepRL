@@ -1,3 +1,12 @@
+'''I/we certify that the code and data in this assignment were generated
+independently, using only the tools and resources defined in the course
+and that I/we did not receive any external help, coaching or contributions
+during the production of this work."
+
+References: 
+1. https://github.com/lvwerra/trl/blob/master/nbs/04-gpt2-sentiment-ppo-training.ipynb
+2. https://github.com/behavioral-data/Empathy-Mental-Health'''
+
 import sys
 sys.path.append("..")
 
@@ -6,13 +15,14 @@ from scipy.spatial import distance
 import nltk
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
+
 from EmpathyModel.empathy_classifier import EmpathyClassifier
 from .coherence_classifier import CoherenceClassifier
 
-coherence_model_path = r"D:\Studies\CSE-546\Final_Project\cls_roberta-large_supervised_shuffle.bin"
-er_path = r"D:\Studies\CSE-546\Final_Project\ER_Model.pth"
-ip_path = r"D:\Studies\CSE-546\Final_Project\EX_Model.pth"
-ex_path = r"D:\Studies\CSE-546\Final_Project\IP_Model.pth"
+# coherence_model_path = input("Coherence Classifier path: ")
+er_path = input("ER path: ")
+ip_path = input("IP path: ")
+ex_path = input("EX path: ")
 
 if torch.cuda.is_available():
 	device = torch.device("cuda")
@@ -22,11 +32,11 @@ else:
 
 tokenizer = AutoTokenizer.from_pretrained("roberta-large")
 
-print("Loading Coherence Model")
-coherence_model = CoherenceClassifier(device, model_path=coherence_model_path)
-print("Coherence Model Loaded")
+# print("Loading Coherence Model")
+# coherence_model = CoherenceClassifier(device, model_path=coherence_model_path)
+# print("Coherence Model Loaded")
 
-print("Loading Empathy Model")
+print(f"Loading Empathy Model on device: {device}")
 empathy_model = EmpathyClassifier(device, er_path, ip_path, ex_path)
 print("Empathy Model Loaded")
 
@@ -44,15 +54,15 @@ def calc_empathy_score(seeker_posts, generated_responses):
 	
 	return batch_score/len(seeker_posts)
 
-def calc_coherence_score(original_responses, candidate): # original_response: list of strings, candidate: string 
-	(logits, predictions,) = coherence_model.predict_empathy(original_responses, candidate)
-	logs_1 = [log[1] for log in logits]
-	score = np.mean(log2prob(logs_1))
-	return score
+# def calc_coherence_score(original_responses, candidate): # original_response: list of strings, candidate: string 
+# 	(logits, predictions,) = coherence_model.predict_empathy(original_responses, candidate)
+# 	logs_1 = [log[1] for log in logits]
+# 	score = np.mean(log2prob(logs_1))
+# 	return score
 
-def log2prob(logs):
-	probs = np.divide(np.exp(logs), (1+np.exp(logs)))
-	return probs
+# def log2prob(logs):
+# 	probs = np.divide(np.exp(logs), (1+np.exp(logs)))
+# 	return probs
  
 def informationFlow(responses):
     r2=0
